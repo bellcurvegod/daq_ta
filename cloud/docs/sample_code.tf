@@ -71,31 +71,3 @@ resource "aws_ecs_task_definition" "weather-streaming" {
   ])
 }
 
-### IAM Role for AWS IoT to DynamoDB ###
-resource "aws_iam_role" "iot_dynamodb_role" {
-  name = "IoTDynamoDBRole"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Action = "sts:AssumeRole"
-      Effect = "Allow"
-      Principal = {
-        Service = "iot.amazonaws.com"
-      }
-    }]
-  })
-
-  inline_policy {
-    name = "IoTDynamoDBPolicy"
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [{
-        Action   = ["dynamodb:PutItem"]
-        Effect   = "Allow"
-        Resource = aws_dynamodb_table.weather_data.arn
-      }]
-    })
-  }
-}
-
